@@ -16,11 +16,15 @@ import time
 
 
 def get_ip() -> str:
-	original_ip = (urllib.request.urlopen('http://ip.42.pl/raw'))
-	mybytes = original_ip.read()
-	ORIGINAL_IP = mybytes.decode("utf8")
-	original_ip.close
-	return ORIGINAL_IP
+	try:
+		original_ip = (urllib.request.urlopen('http://ip.42.pl/raw'))
+		mybytes = original_ip.read()
+		ORIGINAL_IP = mybytes.decode("utf8")
+		original_ip.close
+		return ORIGINAL_IP
+	except Exception as e:
+		print("Error: Connection kicked out. Exception: {}".format(e))
+		return 'Error: Connection kicked out'
 
 def start():
 	C_IP = get_ip()
@@ -32,11 +36,11 @@ def start():
 		print("TRUE")
 		ip = get_ip()
 		print(ip)		
-		if(ip != C_IP):
+		if(ip != C_IP and ip != 'Error: Connection kicked out'):
 			ezgmail.send('sharanshangar@gmail.com', 'IP Change', ip)		
 			print("Changed")
 			C_IP = ip
-		time.sleep(1800)
+		time.sleep(30)
 		
 			
 
